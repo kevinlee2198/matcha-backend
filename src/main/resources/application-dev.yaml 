@@ -1,0 +1,10 @@
+match:
+  # CORS should only be enabled by default with the "dev" profile
+  cors:
+    allowed-origins: 'http://localhost:3000'
+    # Enable CORS when running in GitHub Codespaces
+    allowed-origin-patterns: 'https://*.githubpreview.dev'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    allow-credentials: true
+    max-age: 1800
