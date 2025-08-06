@@ -7,6 +7,10 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public final class StreamUtil {
+
+    private StreamUtil() {
+    }
+
     /**
      * Provides the same functionality as the zip method in python
      * @param as stream a

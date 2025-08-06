@@ -4,6 +4,9 @@ import java.util.function.Function;
 
 public final class DefaultUtil {
 
+    private DefaultUtil() {
+    }
+
     public static <T> T defaultValue(T value, T defaultValue, Function<T, Boolean> validationFunction) {
         if (value == null) {
             return defaultValue;
