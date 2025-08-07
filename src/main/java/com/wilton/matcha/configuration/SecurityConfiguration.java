@@ -23,7 +23,8 @@ public class SecurityConfiguration {
     private final MatchaDelegatingHandlerExceptionResolver matchaDelegatingHandlerExceptionResolver;
 
     @Autowired
-    public SecurityConfiguration(CorsFilter corsFilter, MatchaDelegatingHandlerExceptionResolver matchaDelegatingHandlerExceptionResolver) {
+    public SecurityConfiguration(
+            CorsFilter corsFilter, MatchaDelegatingHandlerExceptionResolver matchaDelegatingHandlerExceptionResolver) {
         this.corsFilter = corsFilter;
         this.matchaDelegatingHandlerExceptionResolver = matchaDelegatingHandlerExceptionResolver;
     }
@@ -31,27 +32,32 @@ public class SecurityConfiguration {
     // https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(corsFilter, CsrfFilter.class)
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(
+                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oAuth2ResourceServerConfigurer -> oAuth2ResourceServerConfigurer
                         .jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(matchaDelegatingHandlerExceptionResolver)
                         .accessDeniedHandler(matchaDelegatingHandlerExceptionResolver))
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/i18n/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
-                        // actuator
-                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                        // When authentication is fully set up re-enable for authentication for all routes
-                        .anyRequest().permitAll())
-//                        .anyRequest().authenticated())
+                .authorizeHttpRequests(
+                        authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
+                                .requestMatchers(HttpMethod.OPTIONS, "/**")
+                                .permitAll()
+                                .requestMatchers("/i18n/**")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/favicon.ico")
+                                .permitAll()
+                                // actuator
+                                .requestMatchers(HttpMethod.GET, "/actuator/**")
+                                .permitAll()
+                                // When authentication is fully set up re-enable for authentication for all routes
+                                .anyRequest()
+                                .permitAll())
+                //                        .anyRequest().authenticated())
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
                         .authenticationEntryPoint(matchaDelegatingHandlerExceptionResolver)
                         .accessDeniedHandler(matchaDelegatingHandlerExceptionResolver));
         return http.build();
     }
-
 }

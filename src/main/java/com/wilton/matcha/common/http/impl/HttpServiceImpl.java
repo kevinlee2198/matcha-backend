@@ -1,14 +1,13 @@
 package com.wilton.matcha.common.http.impl;
 
 import com.wilton.matcha.common.http.HttpService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-
-import java.util.Map;
 
 @Service
 public class HttpServiceImpl implements HttpService {
@@ -30,9 +29,14 @@ public class HttpServiceImpl implements HttpService {
     }
 
     @Override
-    public <T> T sendRequest(HttpMethod httpMethod, String url, Map<String, String[]> headers, MultiValueMap<String, ?> body, Class<T> clazz) {
-        RestClient.RequestBodySpec requestBodySpec = restClient.method(httpMethod)
-                .uri(url);
+    public <T> T sendRequest(
+            HttpMethod httpMethod,
+            String url,
+            Map<String, String[]> headers,
+            MultiValueMap<String, ?> body,
+            Class<T> clazz) {
+        RestClient.RequestBodySpec requestBodySpec =
+                restClient.method(httpMethod).uri(url);
 
         if (!CollectionUtils.isEmpty(headers)) {
             headers.forEach(requestBodySpec::header);

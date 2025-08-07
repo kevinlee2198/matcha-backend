@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.5.4"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "com.wilton"
@@ -60,4 +61,18 @@ dependencyManagement {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+spotless {
+	java {
+		// Use palantir-java-format engine
+		palantirJavaFormat("2.73.0")
+		// Optionally, you can enforce removing unused imports and final newlines
+		removeUnusedImports()
+		endWithNewline()
+	}
+}
+
+tasks.withType<JavaCompile> {
+	dependsOn("spotlessApply")
 }

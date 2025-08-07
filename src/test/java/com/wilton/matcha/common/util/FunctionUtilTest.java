@@ -1,17 +1,16 @@
 package com.wilton.matcha.common.util;
 
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import static com.wilton.matcha.common.util.FunctionalUtil.invokeSafely;
 import static com.wilton.matcha.common.util.FunctionalUtil.safeConsumer;
 import static com.wilton.matcha.common.util.FunctionalUtil.safeFunction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Optional;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 
 public class FunctionUtilTest {
     private static final boolean DONT_THROW_EXCEPTION = false;
@@ -52,7 +51,9 @@ public class FunctionUtilTest {
 
     @Test
     public void canUseFunctionThatThrowsCheckedExceptionInLambda() {
-        Optional<String> result = Stream.of(DONT_THROW_EXCEPTION).map(safeFunction(this::functionMethodWithChecked)).findFirst();
+        Optional<String> result = Stream.of(DONT_THROW_EXCEPTION)
+                .map(safeFunction(this::functionMethodWithChecked))
+                .findFirst();
         assertThat(result).isPresent().contains("Hello");
     }
 
@@ -60,7 +61,9 @@ public class FunctionUtilTest {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void exceptionsForFunctionsAreConverted() {
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> Stream.of(THROW_EXCEPTION).map(safeFunction(this::functionMethodWithChecked)).findFirst())
+                .isThrownBy(() -> Stream.of(THROW_EXCEPTION)
+                        .map(safeFunction(this::functionMethodWithChecked))
+                        .findFirst())
                 .withCauseExactlyInstanceOf(Exception.class);
     }
 

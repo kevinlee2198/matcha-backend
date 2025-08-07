@@ -1,9 +1,8 @@
 package com.wilton.matcha.common.http;
 
+import java.util.Map;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
-
-import java.util.Map;
 
 public interface HttpService {
     /**
@@ -37,5 +36,10 @@ public interface HttpService {
      * @param clazz      class to return the response as
      * @return the response of the http request
      */
-    <T> T sendRequest(HttpMethod httpMethod, String url, Map<String, String[]> headers, MultiValueMap<String, ?> body, Class<T> clazz);
+    <T> T sendRequest(
+            HttpMethod httpMethod,
+            String url,
+            Map<String, String[]> headers,
+            MultiValueMap<String, ?> body,
+            Class<T> clazz);
 }

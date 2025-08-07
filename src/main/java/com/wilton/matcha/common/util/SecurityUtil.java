@@ -1,10 +1,9 @@
 package com.wilton.matcha.common.util;
 
+import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-
-import java.util.Optional;
 
 /**
  * Utility class for Spring Security.
@@ -12,8 +11,7 @@ import java.util.Optional;
 public final class SecurityUtil {
     private static final String EMAIL_CLAIM = "email";
 
-    private SecurityUtil() {
-    }
+    private SecurityUtil() {}
 
     public static Optional<Jwt> getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -43,4 +41,3 @@ public final class SecurityUtil {
         return getPrincipal().map(SecurityUtil::getPrincipalEmail);
     }
 }
-

@@ -1,9 +1,9 @@
 package com.wilton.matcha.common.util;
 
-import org.junit.jupiter.api.Test;
-
 import static com.wilton.matcha.common.util.DefaultUtil.defaultIntLessThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class DefaultUtilTest {
 

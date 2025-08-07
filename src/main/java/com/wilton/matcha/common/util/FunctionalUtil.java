@@ -1,17 +1,15 @@
 package com.wilton.matcha.common.util;
 
-import org.slf4j.Logger;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
 
 public final class FunctionalUtil {
 
-    private FunctionalUtil() {
-    }
+    private FunctionalUtil() {}
 
     /**
      * Runs a given {@link FunctionalUtil.UnsafeRunnable} and logs an error without throwing.
@@ -32,16 +30,14 @@ public final class FunctionalUtil {
      * @return A {@link Consumer} that does nothing.
      */
     public static <T> Consumer<T> noOpConsumer() {
-        return ignored -> {
-        };
+        return ignored -> {};
     }
 
     /**
      * @return A {@link Runnable} that does nothing.
      */
     public static Runnable noOpRunnable() {
-        return () -> {
-        };
+        return () -> {};
     }
 
     /**

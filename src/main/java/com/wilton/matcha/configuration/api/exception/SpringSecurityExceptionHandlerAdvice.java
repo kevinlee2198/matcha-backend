@@ -1,5 +1,6 @@
 package com.wilton.matcha.configuration.api.exception;
 
+import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,8 +13,6 @@ import org.springframework.security.oauth2.server.resource.InvalidBearerTokenExc
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.net.URI;
 
 /**
  * Integrates Spring Security with Problem Details support into Spring Web
@@ -38,7 +37,8 @@ public class SpringSecurityExceptionHandlerAdvice extends ResponseEntityExceptio
         OAuth2Error error = e.getError();
         ProblemDetail problemDetail;
         if (error instanceof BearerTokenError) {
-            problemDetail = ProblemDetail.forStatusAndDetail(((BearerTokenError) error).getHttpStatus(), e.getMessage());
+            problemDetail =
+                    ProblemDetail.forStatusAndDetail(((BearerTokenError) error).getHttpStatus(), e.getMessage());
         } else {
             problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

@@ -1,15 +1,13 @@
 package com.wilton.matcha.common.util;
 
-import org.springframework.data.util.Pair;
-
 import java.util.Iterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.springframework.data.util.Pair;
 
 public final class StreamUtil {
 
-    private StreamUtil() {
-    }
+    private StreamUtil() {}
 
     /**
      * Provides the same functionality as the zip method in python
