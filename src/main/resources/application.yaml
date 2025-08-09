@@ -4,9 +4,3 @@ spring:
 
   jackson:
     property-naming-strategy: SNAKE_CASE
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://localhost:3567/auth/jwt/jwks.json

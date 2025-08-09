@@ -1,9 +1,11 @@
 package com.wilton.matcha.configuration.api.exception;
 
 import java.net.URI;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * See <a href="https://www.baeldung.com/spring-security-exceptionhandler">Link</a>
  */
 @RestControllerAdvice
+@Order(1) // See https://stackoverflow.com/questions/19498378/setting-precedence-of-multiple-controlleradvice-exceptio
 public class SpringSecurityExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ProblemDetail handleAuthenticationException(AuthenticationException e) {
@@ -48,6 +51,13 @@ public class SpringSecurityExceptionHandlerAdvice extends ResponseEntityExceptio
 
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDeniedException(AccessDeniedException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage());
+        problemDetail.setType(URI.create("access_denied"));
+        return problemDetail;
+    }
+
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    public ProblemDetail handleInsufficientAuthenticationException(InsufficientAuthenticationException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage());
         problemDetail.setType(URI.create("access_denied"));
         return problemDetail;

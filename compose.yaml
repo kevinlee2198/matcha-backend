@@ -1,59 +1,60 @@
 services:
-  elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.17.10'
-    environment:
-      - 'ELASTIC_PASSWORD=secret'
-      - 'discovery.type=single-node'
-      - 'xpack.security.enabled=false'
-    ports:
-      - '9200'
-      - '9300'
+#  elasticsearch:
+#    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.17.10'
+#    environment:
+#      - 'ELASTIC_PASSWORD=secret'
+#      - 'discovery.type=single-node'
+#      - 'xpack.security.enabled=false'
+#    ports:
+#      - '9200'
+#      - '9300'
   mongodb:
     image: 'mongo:latest'
     environment:
-      - 'MONGO_INITDB_DATABASE=mydatabase'
-      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
-      - 'MONGO_INITDB_ROOT_USERNAME=root'
+      MONGO_INITDB_DATABASE: mydatabase
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_ROOT_USERNAME: root
     ports:
       - '27017'
-  redis:
-    image: 'redis:latest'
-    ports:
-      - '6379'
+#  redis:
+#    image: 'redis:latest'
+#    ports:
+#      - '6379'
   postgres:
-    image: 'postgres:latest'
+    image: postgres:latest
     environment:
-      POSTGRES_USER: supertokens_user
-      POSTGRES_PASSWORD: somePassword
-      POSTGRES_DB: supertokens
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password  # Replace with a strong password
     ports:
-      - 5432:5432
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
-      - app_network
-    restart: unless-stopped
-    healthcheck:
-      test: [ 'CMD', 'pg_isready', '-U', 'supertokens_user', '-d', 'supertokens' ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-  supertokens:
-    image: registry.supertokens.io/supertokens/supertokens-postgresql:latest
+      - keycloak_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest #  Using Keycloak version 23.0.6
+    command: start-dev # Start Keycloak in development mode
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password  # Replace with a strong password
+      KEYCLOAK_ADMIN: admin # Default admin user
+      KEYCLOAK_ADMIN_PASSWORD: admin # Default admin password (CHANGE IN PRODUCTION)
+      KC_PROXY: edge # Important when using a reverse proxy
+    ports:
+      - "8080:8080" # Map host port 8080 to container port 8080
     depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - 3567:3567
-    environment:
-      POSTGRESQL_CONNECTION_URI: "postgresql://supertokens_user:somePassword@db:5432/supertokens"
+      - postgres # Ensure PostgreSQL starts before Keycloak
     networks:
-      - app_network
-    restart: unless-stopped
-    healthcheck:
-      test: >
-        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - keycloak_network
+    restart: always # Restart the container automatically
+
 networks:
-  app_network:
+  keycloak_network:
     driver: bridge
+
+volumes:
+  postgres_data:

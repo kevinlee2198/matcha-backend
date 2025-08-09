@@ -6,9 +6,11 @@ gradle. It runs on JDK21
 # How to Run the Backend Locally
 Locally you can start the server using
 ```bash
-./gradlew :bootRun
+./gradlew :bootRun --args='--spring.profiles.active=dev'
 ```
-This will start the server on port 8080 - i.e. `http://localhost:8080`
+`--args='--spring.profiles.active=dev'` will make it run on dev mode, merging in changes for the `application-dev.yaml` file
+On dev mode this will start the server on port 8000- i.e.
+`http://localhost:8000` b/c we adjusted it in `application-dev.yaml`
 
 # Managing Gradle Dependencies
 ## Adding a new library
@@ -18,6 +20,8 @@ Add the library in the build.gradle.kts file.
 In development, we run the Spring Boot server by executing the following command:
 `./gradlew bootRun`
 This is not ideal for production b/c it will download all the dependencies, compile, and then package it into a jar file. This is not ideal, since we want an immediately runnable executable for production. Further, `bootRun` will apply certain development defaults that slow down performance and are not ideal for production.
+
+Note that in prod this will run on port 8080.
 
 ## Clean the previously built artifacts
 First you want to clean any artifacts left over by the old build. To do this run:

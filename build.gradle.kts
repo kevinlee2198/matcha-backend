@@ -40,7 +40,7 @@ dependencies {
 //	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-//	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
 	runtimeOnly("org.springframework.modulith:spring-modulith-actuator")
 	runtimeOnly("org.springframework.modulith:spring-modulith-observability")

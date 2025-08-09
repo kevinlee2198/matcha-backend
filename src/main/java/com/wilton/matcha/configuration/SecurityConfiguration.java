@@ -51,10 +51,8 @@ public class SecurityConfiguration {
                                 // actuator
                                 .requestMatchers(HttpMethod.GET, "/actuator/**")
                                 .permitAll()
-                                // When authentication is fully set up re-enable for authentication for all routes
                                 .anyRequest()
-                                .permitAll())
-                //                        .anyRequest().authenticated())
+                                .authenticated())
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
                         .authenticationEntryPoint(matchaDelegatingHandlerExceptionResolver)
                         .accessDeniedHandler(matchaDelegatingHandlerExceptionResolver));

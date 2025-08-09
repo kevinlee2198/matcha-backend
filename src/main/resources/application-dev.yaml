@@ -1,4 +1,14 @@
-match:
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/matcha
+
+server:
+  port: 8000
+
+matcha:
   # CORS should only be enabled by default with the "dev" profile
   cors:
     allowed-origins: 'http://localhost:3000'
