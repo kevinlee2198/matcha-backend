@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Component
-@ConfigurationProperties(prefix = "matcha", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "matcha")
 public class MatchaConfigurationProperties {
     private final CorsConfiguration cors = new CorsConfiguration();
 

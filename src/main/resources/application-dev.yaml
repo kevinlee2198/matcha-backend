@@ -18,3 +18,12 @@ matcha:
     allowed-headers: '*'
     allow-credentials: true
     max-age: 1800
+
+  abac:
+    cerbos:
+      server:
+        url: 'localhost:3593'
+
+  file:
+    storage:
+      local-path: ${user.home}/matcha/storage
