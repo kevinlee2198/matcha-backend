@@ -1,6 +1,6 @@
 package com.wilton.matcha.configuration;
 
-import com.wilton.matcha.common.domain.MatchaUserJwtAuthenticationConverter;
+import com.wilton.matcha.common.security.MatchaUserJwtAuthenticationConverter;
 import com.wilton.matcha.configuration.api.exception.MatchaDelegatingHandlerExceptionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

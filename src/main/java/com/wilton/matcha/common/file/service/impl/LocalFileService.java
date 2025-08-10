@@ -1,5 +1,6 @@
 package com.wilton.matcha.common.file.service.impl;
 
+import com.wilton.matcha.configuration.MatchaConfigurationProperties;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -16,17 +16,17 @@ import org.springframework.util.StreamUtils;
 @Service
 public class LocalFileService {
     private final ResourceLoader resourceLoader;
-
-    @Value("${matcha.file.storage.local-path}")
-    private String basePath;
+    private final String basePath;
 
     @Autowired
-    public LocalFileService(ResourceLoader resourceLoader) {
+    public LocalFileService(
+            ResourceLoader resourceLoader, MatchaConfigurationProperties matchaConfigurationProperties) {
         this.resourceLoader = resourceLoader;
+        this.basePath = matchaConfigurationProperties.getFileStorageLocalPath();
     }
 
     public Resource read(String key) throws IOException {
-        String location = Paths.get(basePath, key).toAbsolutePath().toString();
+        String location = Paths.get(basePath, key).toUri().toString();
         Resource resource = resourceLoader.getResource(location);
 
         if (!resource.exists() || !resource.isReadable()) {

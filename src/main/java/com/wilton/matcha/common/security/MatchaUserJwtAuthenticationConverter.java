@@ -1,6 +1,6 @@
-package com.wilton.matcha.common.domain;
+package com.wilton.matcha.common.security;
 
-import com.wilton.matcha.common.util.SecurityUtil;
+import com.wilton.matcha.common.domain.MatchaUser;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.core.convert.converter.Converter;

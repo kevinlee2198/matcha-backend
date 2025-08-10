@@ -39,6 +39,11 @@ dependencies {
 	implementation("org.springframework.modulith:spring-modulith-starter-mongodb")
 //	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 
+	implementation("dev.cerbos:cerbos-sdk-java:0.16.0")
+	implementation("io.grpc:grpc-core:1.71.0")
+	implementation("org.apache.commons:commons-collections4:4.5.0")
+//	implementation("org.apache.commons:commons-lang3:3.18.0")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 

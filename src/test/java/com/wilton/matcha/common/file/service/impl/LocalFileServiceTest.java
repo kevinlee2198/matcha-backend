@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.wilton.matcha.configuration.MatchaConfigurationProperties;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,22 +25,18 @@ public class LocalFileServiceTest {
     @Mock
     private ResourceLoader resourceLoader;
 
+    @Mock
+    private MatchaConfigurationProperties matchaConfigurationProperties;
+
     @TempDir
     private Path tempDir;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        localFileService = new LocalFileService(resourceLoader);
+        when(matchaConfigurationProperties.getFileStorageLocalPath()).thenReturn(tempDir.toString());
 
-        // Inject temp path into private field
-        try {
-            var basePathField = LocalFileService.class.getDeclaredField("basePath");
-            basePathField.setAccessible(true);
-            basePathField.set(localFileService, tempDir.toString());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        localFileService = new LocalFileService(resourceLoader, matchaConfigurationProperties);
     }
 
     @Test
@@ -55,7 +52,7 @@ public class LocalFileServiceTest {
         // And: simulate reading
         Path expectedPath = tempDir.resolve(key).toAbsolutePath();
         Resource expectedResource = new InputStreamResource(Files.newInputStream(expectedPath));
-        when(resourceLoader.getResource(expectedPath.toString())).thenReturn(expectedResource);
+        when(resourceLoader.getResource(expectedPath.toUri().toString())).thenReturn(expectedResource);
 
         Resource readResource = localFileService.read(key);
 
@@ -65,20 +62,20 @@ public class LocalFileServiceTest {
     }
 
     @Test
-    void testReadThrowsIfFileNotExists() {
+    public void testReadThrowsIfFileNotExists() {
         String key = "non-existent.txt";
         Path expectedPath = tempDir.resolve(key).toAbsolutePath();
 
         Resource resource = mock(Resource.class);
         when(resource.exists()).thenReturn(false);
         when(resource.isReadable()).thenReturn(false);
-        when(resourceLoader.getResource(expectedPath.toString())).thenReturn(resource);
+        when(resourceLoader.getResource(expectedPath.toUri().toString())).thenReturn(resource);
 
         assertThrows(IOException.class, () -> localFileService.read(key));
     }
 
     @Test
-    void testDeleteFileSuccessfully() throws IOException {
+    public void testDeleteFileSuccessfully() throws IOException {
         // Given
         String key = "delete-me.txt";
         Path filePath = tempDir.resolve(key);
@@ -95,7 +92,7 @@ public class LocalFileServiceTest {
     }
 
     @Test
-    void testDeleteNonExistentFileDoesNotThrow() throws IOException {
+    public void testDeleteNonExistentFileDoesNotThrow() throws IOException {
         String key = "does-not-exist.txt";
         localFileService.delete(key); // Should not throw
     }

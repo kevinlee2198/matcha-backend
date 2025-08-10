@@ -1,6 +1,6 @@
 package com.wilton.matcha.common.domain;
 
-import com.wilton.matcha.common.util.SecurityUtil;
+import com.wilton.matcha.common.security.SecurityUtil;
 import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;

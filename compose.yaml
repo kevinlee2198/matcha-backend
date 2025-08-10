@@ -52,6 +52,17 @@ services:
       - keycloak_network
     restart: always # Restart the container automatically
 
+  cerbos:
+    image: ghcr.io/cerbos/cerbos:latest
+    container_name: cerbos
+    ports:
+      - "3592:3592"  # HTTP
+      - "3593:3593"  # gRPC
+    volumes:
+      - ./policies:/policies
+    command: server
+    restart: unless-stopped
+
 networks:
   keycloak_network:
     driver: bridge
