@@ -1,5 +1,7 @@
 package com.wilton.matcha.configuration;
 
+import com.wilton.matcha.core.controller.converter.PostApiDtoRequestSaveToPostSaveRequest;
+import com.wilton.matcha.core.controller.converter.PostToPostApiDtoResponseFull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,8 @@ public class WebConfiguration implements WebMvcConfigurer {
 
         // converters are used to convert between contract obj/dtos of different modules
         // alphabetical order
+        registry.addConverter(new PostApiDtoRequestSaveToPostSaveRequest());
+        registry.addConverter(new PostToPostApiDtoResponseFull());
     }
 
     @Bean
