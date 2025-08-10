@@ -1,6 +1,11 @@
 package com.wilton.matcha.common.util;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -10,6 +15,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
  */
 public final class SecurityUtil {
     private static final String EMAIL_CLAIM = "email";
+    private static final String FIRST_NAME_CLAIM = "given_name";
+    private static final String LAST_NAME_CLAIM = "family_name";
+    private static final String RESOURCE_ACCESS_CLAIM = "resource_access";
 
     private SecurityUtil() {}
 
@@ -39,5 +47,26 @@ public final class SecurityUtil {
 
     public static Optional<String> getPrincipalEmail() {
         return getPrincipal().map(SecurityUtil::getPrincipalEmail);
+    }
+
+    public static String getPrincipalFirstName(Jwt principal) {
+        return principal.getClaimAsString(FIRST_NAME_CLAIM);
+    }
+
+    public static String getPrincipalLastName(Jwt principal) {
+        return principal.getClaimAsString(LAST_NAME_CLAIM);
+    }
+
+    public static Set<String> getPrincipalRoles(Jwt principal) {
+        Map<String, Object> resourceAccess = principal.getClaimAsMap(RESOURCE_ACCESS_CLAIM);
+
+        return resourceAccess.values().stream()
+                .filter(Objects::nonNull)
+                .filter(client -> client instanceof Map)
+                .map(client -> ((Map<?, ?>) client).get("roles"))
+                .filter(roles -> roles instanceof List<?>)
+                .flatMap(roles ->
+                        ((List<?>) roles).stream().filter(Objects::nonNull).map(Object::toString))
+                .collect(Collectors.toSet());
     }
 }
